@@ -5,6 +5,7 @@ from pdf2imgs import pdf2imgs
 import argparse
 from tqdm import tqdm
 import shutil
+import numpy as np
 
 def get_args():
     parser = argparse.ArgumentParser()
@@ -19,8 +20,7 @@ def parse_pdf(pdf_name):
         
     for img_name in tqdm(img_names):
         img_path = os.path.join(pdf_name.strip('.pdf'), img_name)
-        image = cv2.imread(img_path)
-        image = image[..., ::-1]  
+        image = cv2.imdecode(np.fromfile(img_path, dtype=np.uint8), -1)
         try:
             results = ocr_model.ocr(image)
             txt_ = ""
